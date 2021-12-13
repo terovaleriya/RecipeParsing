@@ -55,11 +55,13 @@ def get_ingredients(recipe: BeautifulSoup) -> List[Ingredient]:
     ingredients_list = get_i(recipe, re.compile('parbase ingredients text.*'))
     ingredients: List[Ingredient] = []
     for ingredient in ingredients_list:
-        ingredient = ingredient.replace("• ", "").replace("*", "").replace("", " ")
+        ingredient = ingredient.replace("• ", "").replace("*", "").replace("",
+                                                                           " ")
         ingredient = re.sub(' +', ' ', ingredient)
         comment = ingredient.startswith("(") and ingredient.endswith(")")
         ingredient = ingredient.strip()
-        if ingredient and not ingredient.isupper() and not ingredient.endswith(":") and not comment:
+        if ingredient and not ingredient.isupper() and not ingredient.endswith(
+                ":") and not comment:
             ingredients.append(Ingredient(ingredient))
     assert ingredients
     return ingredients
@@ -69,16 +71,19 @@ def get_instructions(recipe: BeautifulSoup) -> List[Step]:
     instructions_list = get_i(recipe, re.compile("method parbase text.*"))
     # избавляемся от Cook's tip
     strings_with_substring = [string for string in instructions_list if
-                              string.startswith(("Cook’s tip", "Cook's tip", "Cook's Tip"))]
+                              string.startswith(
+                                  ("Cook’s tip", "Cook's tip", "Cook's Tip"))]
     if strings_with_substring:
-        instructions_list = instructions_list[:instructions_list.index(strings_with_substring[0])]
+        instructions_list = instructions_list[
+                            :instructions_list.index(strings_with_substring[0])]
     instructions: List[Step] = []
     for instruction in instructions_list:
         instruction = instruction.replace("• ", "")
         instruction = re.sub(' +', ' ', instruction).strip()
         instruction = re.sub(re.compile('^\d+(\s*\.|\s)'), "", instruction)
         instruction = instruction.replace("\n", " ")
-        if instruction and not instruction.isupper() and not instruction.endswith(":"):
+        if instruction and not instruction.isupper() and not instruction.endswith(
+                ":"):
             instructions.append(Step(instruction.strip()))
     return instructions
 
@@ -102,7 +107,8 @@ def get_nutrition(recipe: BeautifulSoup) -> dict:
 def get_recipe(file):
     data = file.read()
     recipe = recipe_content(data)
-    return Recipe(get_title(recipe), get_tags(recipe), get_planning(recipe), get_ingredients(recipe),
+    return Recipe(get_title(recipe), get_tags(recipe), get_planning(recipe),
+                  get_ingredients(recipe),
                   get_instructions(recipe),
                   get_nutrition(recipe), get_image(recipe))
 
@@ -110,10 +116,12 @@ def get_recipe(file):
 # getting json out of parsed Recipe
 def get_json(file):
     recipe = get_recipe(file)
-    return json.dumps(recipe.__dict__, default=lambda o: o.__dict__, ensure_ascii=False)
+    return json.dumps(recipe.__dict__, default=lambda o: o.__dict__,
+                      ensure_ascii=False)
 
 
 def recipe_content(html_data) -> BeautifulSoup:
-    recipe = get_soup(html_data).find('div', {'itemtype': "http://schema.org/Recipe"})
+    recipe = get_soup(html_data).find('div',
+                                      {'itemtype': "http://schema.org/Recipe"})
     assert recipe
     return recipe

@@ -43,7 +43,8 @@ class Step:
 
 
 class Planning:
-    def __init__(self, prep_time: str, cook_time: str, total_time: str, serves: str):
+    def __init__(self, prep_time: str, cook_time: str, total_time: str,
+                 serves: str):
         self.prep_time = prep_time
         self.cook_time = cook_time
         self.total_time = total_time
@@ -54,7 +55,8 @@ class Planning:
 
 
 class Recipe:
-    def __init__(self, title: str, tags: List[Tag], planning: Planning, ingredients: List[Ingredient],
+    def __init__(self, title: str, tags: List[Tag], planning: Planning,
+                 ingredients: List[Ingredient],
                  instructions: List[Step], nutrition: dict, image_url: str):
         self.title = title
         self.tags = tags

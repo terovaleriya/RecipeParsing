@@ -20,7 +20,8 @@ soup = get_soup(page_html)
 soup = soup.find('div', {'class': "l-content"})
 categories = soup.findAll("a", href=re.compile("/home/recipes/.+$"))
 categories = [category['href'] for category in categories]
-categories = [category if category.startswith("https://www.waitrose.com") else 'https://www.waitrose.com' + category for
+categories = [category if category.startswith(
+    "https://www.waitrose.com") else 'https://www.waitrose.com' + category for
               category in categories]
 categories = set(categories)
 
@@ -32,9 +33,11 @@ for category in categories:
         with open('recipes_per_category.txt', 'w') as distribution:
             category_html = get_html(category)
             category_soup = get_soup(category_html)
-            recipes = category_soup.findAll("a", href=re.compile("/home/recipes/recipe_directory.+$"))
+            recipes = category_soup.findAll("a", href=re.compile(
+                "/home/recipes/recipe_directory.+$"))
             distribution.write("\nКатегория: " + category + "\n")
-            distribution.write("Рецептов в категории: " + str(len(recipes)) + "\n")
+            distribution.write(
+                "Рецептов в категории: " + str(len(recipes)) + "\n")
 
             recipes = [recipe['href'] for recipe in recipes]
             recipes = [

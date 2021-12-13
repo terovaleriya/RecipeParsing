@@ -46,7 +46,8 @@ async def create_link(table: Any, id_a, id_b) -> int:
         link = await table.create(**obj_data)
         return link.id
     except asyncpg.exceptions.UniqueViolationError:
-        logging.info("Link in %s between %s and %s already exists", str(table), str(id_a), str(id_b))
+        logging.info("Link in %s between %s and %s already exists", str(table),
+                     str(id_a), str(id_b))
 
 
 async def create_link_recipe_ingredient(id_a: int, id_b: int):
@@ -87,13 +88,15 @@ async def create_link_product_string_ids_matching(id_a: int, id_b: str):
 
 # GETTERS
 
-async def get_unchecked_products_by_ingredient_id(ingredient_id: int) -> List[int]:
+async def get_unchecked_products_by_ingredient_id(ingredient_id: int) -> List[
+    int]:
     link_list = await model.UncheckedIngredientsProducts.query.where(
         model.UncheckedIngredientsProducts.ingredient == ingredient_id).gino.all()
     return [i.product for i in link_list]
 
 
-async def get_matched_products_by_ingredient_id(ingredient_id: int) -> List[int]:
+async def get_matched_products_by_ingredient_id(ingredient_id: int) -> List[
+    int]:
     link_list = await model.MatchedIngredientsProducts.query.where(
         model.MatchedIngredientsProducts.ingredient == ingredient_id).gino.all()
     return [i.product for i in link_list]
@@ -109,11 +112,13 @@ async def retrieve_product_by_id(product_id: int) -> Optional[schema.Product]:
 
 # OK
 async def delete_product_by_id(product_id: int) -> None:
-    await model.Products.delete.where(model.Products.id == product_id).gino.status()
+    await model.Products.delete.where(
+        model.Products.id == product_id).gino.status()
 
 
 # OK
-async def create_product(name: str, size: str = None, price: str = None, image_url: str = None) -> int:
+async def create_product(name: str, size: str = None, price: str = None,
+                         image_url: str = None) -> int:
     products = model.Products
     try:
         obj_data = {
@@ -127,13 +132,15 @@ async def create_product(name: str, size: str = None, price: str = None, image_u
 
     except asyncpg.exceptions.UniqueViolationError:
         logging.info(
-            "Product with [name '%s', size '%s', price %s, image_url '%s'] already exists", name, str(size), str(price),
+            "Product with [name '%s', size '%s', price %s, image_url '%s'] already exists",
+            name, str(size), str(price),
             str(image_url))
         return await get_product_id_by_parameters(name, size, price, image_url)
 
 
 # OK
-async def update_product_by_id(product_id: int, name: str = None, size: str = None, price: str = None,
+async def update_product_by_id(product_id: int, name: str = None,
+                               size: str = None, price: str = None,
                                image_url: str = None) -> Optional[
     int]:
     products = model.Products
@@ -163,10 +170,14 @@ async def update_product_by_id(product_id: int, name: str = None, size: str = No
 
 
 # OK
-async def get_product_id_by_parameters(name: str, size: str = None, price: str = None, image_url: str = None) -> int:
+async def get_product_id_by_parameters(name: str, size: str = None,
+                                       price: str = None,
+                                       image_url: str = None) -> int:
     products = model.Products
-    return await products.query.where(products.name == name).where(products.size == size). \
-        where(products.price == price).where(products.image_url == image_url).gino.scalar()
+    return await products.query.where(products.name == name).where(
+        products.size == size). \
+        where(products.price == price).where(
+        products.image_url == image_url).gino.scalar()
 
 
 # RECIPE
@@ -179,7 +190,8 @@ async def retrieve_recipe_by_id(recipe_id: int) -> Optional[schema.Recipe]:
 
 # OK
 async def delete_recipe_by_id(recipe_id: int) -> None:
-    await model.Recipes.delete.where(model.Recipes.id == recipe_id).gino.status()
+    await model.Recipes.delete.where(
+        model.Recipes.id == recipe_id).gino.status()
 
 
 # OK
@@ -201,7 +213,8 @@ async def create_recipe_by_title(title: str) -> int:
 
 
 # ?
-async def update_recipe_by_id(recipe_id: int, title: str = None) -> Optional[int]:
+async def update_recipe_by_id(recipe_id: int, title: str = None) -> Optional[
+    int]:
     recipes = model.Recipes
     try:
         obj = await recipes.get(recipe_id)
@@ -213,7 +226,9 @@ async def update_recipe_by_id(recipe_id: int, title: str = None) -> Optional[int
     except AttributeError:
         logging.warning("Recipe with id %s doesn't exist", str(recipe_id))
     except asyncpg.exceptions.UniqueViolationError:
-        logging.error("Recipe with title '%s' already exists. Update by id %s is not completed", title, recipe_id)
+        logging.error(
+            "Recipe with title '%s' already exists. Update by id %s is not completed",
+            title, recipe_id)
         id = await get_recipe_id_by_title(title)
         return id
 
@@ -228,18 +243,21 @@ async def get_recipe_id_by_title(title: str) -> int:
 # INGREDIENT
 
 # OK
-async def retrieve_ingredient_by_id(ingredient_id: int) -> Optional[schema.Ingredient]:
+async def retrieve_ingredient_by_id(ingredient_id: int) -> Optional[
+    schema.Ingredient]:
     obj = await model.Ingredients.get(ingredient_id)
     return obj.as_schema() if obj else None
 
 
 # OK
 async def delete_ingredient_by_id(ingredient_id: int) -> None:
-    await model.Ingredients.delete.where(model.Ingredients.id == ingredient_id).gino.status()
+    await model.Ingredients.delete.where(
+        model.Ingredients.id == ingredient_id).gino.status()
 
 
 # OK
-async def create_ingredient_by_raw_string(raw_string: str, name: str = None, quantity: str = None,
+async def create_ingredient_by_raw_string(raw_string: str, name: str = None,
+                                          quantity: str = None,
                                           comment: str = None) -> int:
     ingredients = model.Ingredients
     try:
@@ -254,12 +272,14 @@ async def create_ingredient_by_raw_string(raw_string: str, name: str = None, qua
         return ingredient_.id
     except asyncpg.exceptions.UniqueViolationError:
         id = await get_ingredient_id_by_raw_string(raw_string)
-        logging.info("Ingredient with raw string '%s' already exists", raw_string)
+        logging.info("Ingredient with raw string '%s' already exists",
+                     raw_string)
         return id
 
 
 # OK
-async def update_ingredient_by_id(ingredient_id: int, name: str = None, quantity: str = None,
+async def update_ingredient_by_id(ingredient_id: int, name: str = None,
+                                  quantity: str = None,
                                   comment: str = None) -> None:
     ingredients = model.Ingredients
 
@@ -275,13 +295,15 @@ async def update_ingredient_by_id(ingredient_id: int, name: str = None, quantity
         }
         await obj.update(**obj_data).apply()
     except AttributeError:
-        logging.warning("Ingredient with id %s doesn't exist", str(ingredient_id))
+        logging.warning("Ingredient with id %s doesn't exist",
+                        str(ingredient_id))
 
 
 # OK
 async def get_ingredient_id_by_raw_string(raw_string: str) -> int:
     ingredients = model.Ingredients
-    id = await ingredients.query.where(ingredients.raw_string == raw_string).gino.scalar()
+    id = await ingredients.query.where(
+        ingredients.raw_string == raw_string).gino.scalar()
     return id
 
 
@@ -329,7 +351,9 @@ async def update_tag_by_id(tag_id: int, tag: str = None) -> Optional[int]:
         logging.warning("Tag with id %s doesn't exist", str(tag_id))
     except asyncpg.exceptions.UniqueViolationError:
         id = await get_tag_id_by_tag(tag)
-        logging.error("Tag with name '%s' already exists. Update by id %s is not completed", tag, tag_id)
+        logging.error(
+            "Tag with name '%s' already exists. Update by id %s is not completed",
+            tag, tag_id)
         return id
 
 
@@ -369,7 +393,8 @@ async def create_image_by_image_url(image_url: str) -> int:
 
 
 # ?
-async def update_image_by_id(image_id: int, image_url: str = None) -> Optional[int]:
+async def update_image_by_id(image_id: int, image_url: str = None) -> Optional[
+    int]:
     images = model.Images
     try:
         obj = await images.get(image_id)
@@ -382,8 +407,10 @@ async def update_image_by_id(image_id: int, image_url: str = None) -> Optional[i
         logging.warning("Image with id %s doesn't exist", str(image_id))
     except asyncpg.exceptions.UniqueViolationError:
         id = await get_image_id_by_image_url(image_url)
-        logging.error("Image with image URL '%s' already exists. Update by id %s is not completed", image_url,
-                      image_id)
+        logging.error(
+            "Image with image URL '%s' already exists. Update by id %s is not completed",
+            image_url,
+            image_id)
         return id
 
 
@@ -397,14 +424,16 @@ async def get_image_id_by_image_url(image_url: str) -> int:
 # INSTRUCTIONS
 
 # OK
-async def retrieve_instruction_by_id(instruction_id: int) -> Optional[schema.Instruction]:
+async def retrieve_instruction_by_id(instruction_id: int) -> Optional[
+    schema.Instruction]:
     obj = await model.Instructions.get(instruction_id)
     return obj.as_schema() if obj else None
 
 
 # OK
 async def delete_instruction_by_id(instruction_id: int) -> None:
-    await model.Instructions.delete.where(model.Instructions.id == instruction_id).gino.status()
+    await model.Instructions.delete.where(
+        model.Instructions.id == instruction_id).gino.status()
 
 
 # OK
@@ -419,33 +448,40 @@ async def create_instruction_by_instruction(instruction: str) -> int:
         return instruction_.id
     except asyncpg.exceptions.UniqueViolationError:
         id = await get_instruction_by_instruction(instruction)
-        logging.info("Instruction with content '%s' already exists", instruction)
+        logging.info("Instruction with content '%s' already exists",
+                     instruction)
         return id
 
 
 # ?
-async def update_instruction_by_id(instruction_id: int, instruction: str = None) -> Optional[int]:
+async def update_instruction_by_id(instruction_id: int,
+                                   instruction: str = None) -> Optional[int]:
     instructions = model.Instructions
     try:
         obj = await instructions.get(instruction_id)
-        instruction = instruction if (instruction is not None) else obj.instruction
+        instruction = instruction if (
+                instruction is not None) else obj.instruction
         obj_data = {
             "instruction": instruction
         }
         await obj.update(**obj_data).apply()
     except AttributeError:
-        logging.warning("Instruction with id %s doesn't exist", str(instruction_id))
+        logging.warning("Instruction with id %s doesn't exist",
+                        str(instruction_id))
     except asyncpg.exceptions.UniqueViolationError:
         id = await get_instruction_by_instruction(instruction)
-        logging.error("Instruction with content '%s' already exists. Update by id %s is not completed", instruction,
-                      instruction_id)
+        logging.error(
+            "Instruction with content '%s' already exists. Update by id %s is not completed",
+            instruction,
+            instruction_id)
         return id
 
 
 # OK
 async def get_instruction_by_instruction(instruction: str) -> int:
     instructions = model.Instructions
-    id = await instructions.query.where(instructions.instruction == instruction).gino.scalar()
+    id = await instructions.query.where(
+        instructions.instruction == instruction).gino.scalar()
     return id
 
 
@@ -462,7 +498,9 @@ async def delete_planning_by_id(planning_id: int) -> None:
 
 
 # OK
-async def create_planning_by_planning(prep_time: str = None, cook_time: str = None, total_time: str = None,
+async def create_planning_by_planning(prep_time: str = None,
+                                      cook_time: str = None,
+                                      total_time: str = None,
                                       serves: str = None) -> int:
     planning = model.Plan
     try:
@@ -475,15 +513,18 @@ async def create_planning_by_planning(prep_time: str = None, cook_time: str = No
         planning_ = await planning.create(**obj_data)
         return planning_.id
     except asyncpg.exceptions.UniqueViolationError:
-        id = await get_planning_id_by_parameters(prep_time, cook_time, total_time, serves)
+        id = await get_planning_id_by_parameters(prep_time, cook_time,
+                                                 total_time, serves)
         logging.info(
-            "Planning with [prep_time = %s, cook_time = %s, total_time = %s, %s serves] already exists", str(prep_time),
+            "Planning with [prep_time = %s, cook_time = %s, total_time = %s, %s serves] already exists",
+            str(prep_time),
             str(cook_time), str(total_time), str(serves))
         return id
 
 
 # ?
-async def update_planning_by_id(planning_id: int, prep_time: str = None, cook_time: str = None, total_time: str = None,
+async def update_planning_by_id(planning_id: int, prep_time: str = None,
+                                cook_time: str = None, total_time: str = None,
                                 serves: str = None) -> Optional[int]:
     planning = model.Plan
     try:
@@ -504,7 +545,8 @@ async def update_planning_by_id(planning_id: int, prep_time: str = None, cook_ti
     except AttributeError:
         logging.warning("Planning with id %s doesn't exist", str(planning_id))
     except asyncpg.exceptions.UniqueViolationError:
-        id = await get_planning_id_by_parameters(prep_time, cook_time, total_time, serves)
+        id = await get_planning_id_by_parameters(prep_time, cook_time,
+                                                 total_time, serves)
         logging.error(
             "Planning with [prep_time = %s, cook_time = %s, total_time = %s, %s serves] already exists. Update by id %s is not completed",
             str(prep_time),
@@ -513,31 +555,40 @@ async def update_planning_by_id(planning_id: int, prep_time: str = None, cook_ti
 
 
 # OK
-async def get_planning_id_by_parameters(prep_time: str = None, cook_time: str = None, total_time: str = None,
+async def get_planning_id_by_parameters(prep_time: str = None,
+                                        cook_time: str = None,
+                                        total_time: str = None,
                                         serves: str = None) -> int:
     planning = model.Plan
-    id = await planning.query.where(planning.prep_time == prep_time).where(planning.cook_time == cook_time).where(
-        planning.total_time == total_time).where(planning.serves == serves).gino.scalar()
+    id = await planning.query.where(planning.prep_time == prep_time).where(
+        planning.cook_time == cook_time).where(
+        planning.total_time == total_time).where(
+        planning.serves == serves).gino.scalar()
     return id
 
 
 # NUTRITION
 
 # OK
-async def retrieve_nutrition_by_id(nutrition_id: int) -> Optional[schema.Nutrition]:
+async def retrieve_nutrition_by_id(nutrition_id: int) -> Optional[
+    schema.Nutrition]:
     obj = await model.Nutrition.get(nutrition_id)
     return obj.as_schema() if obj else None
 
 
 # OK
 async def delete_nutrition_by_id(nutrition_id: int) -> None:
-    await model.Nutrition.delete.where(model.Nutrition.id == nutrition_id).gino.status()
+    await model.Nutrition.delete.where(
+        model.Nutrition.id == nutrition_id).gino.status()
 
 
 # OK
-async def create_nutrition_by_nutrition(energy: str = None, fat: str = None, saturated_fat: str = None,
-                                        carbohydrate: str = None, sugars: str = None,
-                                        protein: str = None, salt: str = None, fibre: str = None) -> int:
+async def create_nutrition_by_nutrition(energy: str = None, fat: str = None,
+                                        saturated_fat: str = None,
+                                        carbohydrate: str = None,
+                                        sugars: str = None,
+                                        protein: str = None, salt: str = None,
+                                        fibre: str = None) -> int:
     nutrition = model.Nutrition
     try:
         obj_data = {
@@ -553,24 +604,30 @@ async def create_nutrition_by_nutrition(energy: str = None, fat: str = None, sat
         nutrition_ = await nutrition.create(**obj_data)
         return nutrition_.id
     except asyncpg.exceptions.UniqueViolationError:
-        id = await get_nutrition_id_by_parameters(energy, fat, saturated_fat, carbohydrate,
+        id = await get_nutrition_id_by_parameters(energy, fat, saturated_fat,
+                                                  carbohydrate,
                                                   sugars, protein, salt, fibre)
-        logging.info("This nutrition with this exact nutrient information already exists")
+        logging.info(
+            "This nutrition with this exact nutrient information already exists")
         return id
 
 
 # OK
-async def update_nutrition_by_id(nutrition_id: int, energy: str = None, fat: str = None, saturated_fat: str = None,
+async def update_nutrition_by_id(nutrition_id: int, energy: str = None,
+                                 fat: str = None, saturated_fat: str = None,
                                  carbohydrate: str = None, sugars: str = None,
-                                 protein: str = None, salt: str = None, fibre: str = None) -> Optional[int]:
+                                 protein: str = None, salt: str = None,
+                                 fibre: str = None) -> Optional[int]:
     nutrition = model.Nutrition
     try:
         obj = await nutrition.get(nutrition_id)
 
         energy = energy if (energy is not None) else obj.energy
         fat = fat if (fat is not None) else obj.fat
-        saturated_fat = saturated_fat if (saturated_fat is not None) else obj.saturated_fat
-        carbohydrate = carbohydrate if (carbohydrate is not None) else obj.carbohydrate
+        saturated_fat = saturated_fat if (
+                saturated_fat is not None) else obj.saturated_fat
+        carbohydrate = carbohydrate if (
+                carbohydrate is not None) else obj.carbohydrate
         sugars = sugars if (sugars is not None) else obj.sugars
         protein = protein if (protein is not None) else obj.protein
         salt = salt if (salt is not None) else obj.salt
@@ -591,7 +648,8 @@ async def update_nutrition_by_id(nutrition_id: int, energy: str = None, fat: str
     except AttributeError:
         logging.warning("Planning with id %s doesn't exist", str(nutrition_id))
     except asyncpg.exceptions.UniqueViolationError:
-        id = await get_nutrition_id_by_parameters(energy, fat, saturated_fat, carbohydrate,
+        id = await get_nutrition_id_by_parameters(energy, fat, saturated_fat,
+                                                  carbohydrate,
                                                   sugars, protein, salt, fibre)
         logging.error(
             "This nutrition with this exact nutrient information already exists. Update by id %s is not completed",
@@ -600,12 +658,17 @@ async def update_nutrition_by_id(nutrition_id: int, energy: str = None, fat: str
 
 
 # OK
-async def get_nutrition_id_by_parameters(energy: str = None, fat: str = None, saturated_fat: str = None,
-                                         carbohydrate: str = None, sugars: str = None,
-                                         protein: str = None, salt: str = None, fibre: str = None) -> int:
+async def get_nutrition_id_by_parameters(energy: str = None, fat: str = None,
+                                         saturated_fat: str = None,
+                                         carbohydrate: str = None,
+                                         sugars: str = None,
+                                         protein: str = None, salt: str = None,
+                                         fibre: str = None) -> int:
     nutrition = model.Nutrition
-    nutrition_id = await nutrition.query.where(nutrition.energy == energy).where(nutrition.fat == fat).where(
-        nutrition.saturated_fat == saturated_fat).where(nutrition.carbohydrate == carbohydrate).where(
+    nutrition_id = await nutrition.query.where(
+        nutrition.energy == energy).where(nutrition.fat == fat).where(
+        nutrition.saturated_fat == saturated_fat).where(
+        nutrition.carbohydrate == carbohydrate).where(
         nutrition.sugars == sugars).where(nutrition.protein == protein).where(
         nutrition.salt == salt).where(nutrition.fibre == fibre).gino.scalar()
     return nutrition_id

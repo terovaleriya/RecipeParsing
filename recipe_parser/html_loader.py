@@ -1,5 +1,3 @@
-import logging
-
 import requests
 from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter

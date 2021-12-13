@@ -16,7 +16,8 @@ async def recipe_to_db(recipe: Recipe):
     ingredients = recipe.ingredients
     if ingredients:
         for ingredient in ingredients:
-            ingredient_id = await create_ingredient_by_raw_string(ingredient.get("item"))
+            ingredient_id = await create_ingredient_by_raw_string(
+                ingredient.get("item"))
             await create_link_recipe_ingredient(recipe_id, ingredient_id)
 
     tags = recipe.tags
@@ -28,7 +29,8 @@ async def recipe_to_db(recipe: Recipe):
     instructions = recipe.instructions
     if instructions:
         for instruction in instructions:
-            instruction_id = await create_instruction_by_instruction(instruction.get("step"))
+            instruction_id = await create_instruction_by_instruction(
+                instruction.get("step"))
             await create_link_recipe_instruction(recipe_id, instruction_id)
 
     image_id = await create_image_by_image_url(recipe.image_url)
@@ -36,17 +38,19 @@ async def recipe_to_db(recipe: Recipe):
 
     planning = recipe.planning
     if planning:
-        planning_id = await create_planning_by_planning(planning.get("prep_time"), planning.get("cook_time"),
-                                                        planning.get("total_time"), planning.get("serves"))
+        planning_id = await create_planning_by_planning(
+            planning.get("prep_time"), planning.get("cook_time"),
+            planning.get("total_time"), planning.get("serves"))
         await create_link_recipe_planning(recipe_id, planning_id)
 
     nutrition = recipe.nutrition
     if nutrition:
-        nutrition_id = await create_nutrition_by_nutrition(nutrition.get("Energy"), nutrition.get("Fat"),
-                                                           nutrition.get("Saturated Fat"),
-                                                           nutrition.get("Carbohydrate"),
-                                                           nutrition.get("Sugars"), nutrition.get("Protein"),
-                                                           nutrition.get("Salt"), nutrition.get("Fibre"))
+        nutrition_id = await create_nutrition_by_nutrition(
+            nutrition.get("Energy"), nutrition.get("Fat"),
+            nutrition.get("Saturated Fat"),
+            nutrition.get("Carbohydrate"),
+            nutrition.get("Sugars"), nutrition.get("Protein"),
+            nutrition.get("Salt"), nutrition.get("Fibre"))
 
         await create_link_recipe_nutrition(recipe_id, nutrition_id)
 
@@ -61,7 +65,8 @@ async def load_matched_product(ingredient_id: int, product_id: int):
 
 
 async def product_to_db(product: Product):
-    product_id = await create_product(product.name, product.size, product.price, product.image_url)
+    product_id = await create_product(product.name, product.size, product.price,
+                                      product.image_url)
 
     await create_link_product_string_ids_matching(product_id, product.str_id)
 

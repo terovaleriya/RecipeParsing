@@ -1,12 +1,10 @@
 import asyncio
 import json
-
 import os
 
 from core.get_db_credentials import get_credentials
 from core.loaders import recipe_to_db
 from core.model import db
-
 from recipe_parser.recipe import Recipe
 
 

@@ -28,26 +28,33 @@ class TestParserBeef(unittest.TestCase):
     def test_step2_parse(self):
         beef_file = open(file, "r")
         recipe = get_recipe(beef_file)
-        my_recipe = Recipe("Pulled beef salad with mint & avocado", [Tag("Gluten Free")],
+        my_recipe = Recipe("Pulled beef salad with mint & avocado",
+                           [Tag("Gluten Free")],
                            Planning("PT10M", "PT30M", "PT40M", "2"),
                            [Ingredient('380g pack slow cooked beef brisket'),
-                            Ingredient('2 echalion shallots, thinly sliced into rings'),
+                            Ingredient(
+                                '2 echalion shallots, thinly sliced into rings'),
                             Ingredient('2 essential Lemons, juice reserved'),
-                            Ingredient('3 tbsp Cooks’ Ingredients Thai Sweet Chilli Sauce'),
+                            Ingredient(
+                                '3 tbsp Cooks’ Ingredients Thai Sweet Chilli Sauce'),
                             Ingredient('1 x 350g tub Thai Sticky Rice'),
-                            Ingredient('1 Waitrose 1 Perfectly Ripe Extra Large Avocado, stoned and sliced'),
+                            Ingredient(
+                                '1 Waitrose 1 Perfectly Ripe Extra Large Avocado, stoned and sliced'),
                             Ingredient('½ x 25g pack mint, leaves picked'),
-                            Ingredient('1 Cooks’ Ingredients Red Thai Chilli, thinly sliced')],
+                            Ingredient(
+                                '1 Cooks’ Ingredients Red Thai Chilli, thinly sliced')],
                            [Step(
                                "Preheat the oven to 200°C, gas mark 6. Cook the beef for 30 minutes, following pack instructions. Discard any large pieces of fat from the liquor before you cook."),
                                Step(
                                    "Toss the shallots with 5 tbsp lemon juice and the sweet chilli sauce to create a dressing, then set aside."),
                                Step(
                                    "When the meat is cooked, lift it from the juices and pull to shreds using two forks. Add 2 tbsp of the cooking juices to the shallots and sweet chilli sauce."),
-                               Step("Meanwhile, heat the sticky rice according to the pack instructions."),
+                               Step(
+                                   "Meanwhile, heat the sticky rice according to the pack instructions."),
                                Step(
                                    "Toss the meat with the dressing, avocado, mint leaves and fresh Thai chilli, then serve straight away with the sticky rice.")],
-                           {'Energy': '3,226kJ 768kcals', 'Fat': '29g', 'Saturated Fat': '7.9g', 'Carbohydrate': '78g',
+                           {'Energy': '3,226kJ 768kcals', 'Fat': '29g',
+                            'Saturated Fat': '7.9g', 'Carbohydrate': '78g',
                             'Sugars': '17g',
                             'Protein': '44g', 'Salt': '1.3g', 'Fibre': '8g'},
                            "//d1v30bmd12dhid.cloudfront.net/static/version6/content/dam/waitrose/recipes/images/p/WW-Pulled-Beef-Mint-Avocado-Salad-Shroud.gif/_jcr_content/renditions/cq5dam.thumbnail.400.400.png"
