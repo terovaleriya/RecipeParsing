@@ -1,0 +1,7 @@
+{
+  "host": "78.47.1.106",
+  "username": _USER_NAME,
+  "password": _PASSWORD,
+  "dbname": "recipe_automation",
+  "port": 5432
+}
